@@ -5,31 +5,20 @@ import java.io.*;
 public class Demo {
     public static String read(String path) {
         //открываем файл по пути
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(path));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         StringBuilder stringBuilder = new StringBuilder();
-        String currentString = null;
-        //построчно считываем файл
-        while (true) {
-            try {
-                if (!((currentString = reader.readLine()) != null)) break;
-            } catch (IOException e) {
-                e.printStackTrace();
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String currentString;
+            //построчно считываем файл
+            while ((currentString = reader.readLine()) != null) {
+                stringBuilder.append(currentString);
+                stringBuilder.append("\n");
             }
-            stringBuilder.append(currentString);
-            stringBuilder.append("\n");
+            //возвращаем вычитанный текст в строке
+        } catch (FileNotFoundException fileNotFoundException) {
+            System.out.println("FileNotFoundException - " + fileNotFoundException.getMessage());
+        } catch (IOException ioException) {
+            System.out.println("IOException - " + ioException.getMessage());
         }
-        //закрываем файл
-        try {
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //возвращаем вычитанный текст в строке
         return stringBuilder.toString();
     }
 
